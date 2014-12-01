@@ -2,10 +2,10 @@
 
 clear
 
-n = 100;          % number of observations
+n = 100;            % number of observations
 p = 30;             % dimensions
 sig2 = 0.01;        % variance of the data
-rho = 0.8;          % exponential decay of the T matrix
+rho = 0.5;          % exponential decay of the T matrix
 
 % Use the producedure to generate the correct dataset c
 [data,SIGINV, SIG_TRUE, T_TRUE, DINV_TRUE] = generateDataset(n,p,sig2,rho,'cutoff');
@@ -13,8 +13,8 @@ rho = 0.8;          % exponential decay of the T matrix
 %% Start the Gibbs Sampler for estimation procedure
 
 % Simulation Parameters
-nSim = 5000;         % Number of Simulation
-nBurnIn = 1000;
+nSim = 5000;        % Number of Simulation
+nBurnIn = 10;
 lambda = 2;         % Regularization Parameter
 
 % Allocate the matrix for simulation
@@ -69,18 +69,11 @@ for k=2:p;
             scale = (sum((y-X*newPhi).^2) + newPhi' * DINV * newPhi)/2;
             newSig2 = 1 / gamrnd(shape, 1/scale);
         
-        % Simulate tauinver
-            
-            newTau2inv = zeros(1,k-1);
-            for j = 1:k-1
-                lam_g = lambda^2;
-                mu_g  = sqrt(lambda^2 * sig2 / phi(j)^2);
-                newTau2inv(1,j) = ingrnd(mu_g,lam_g);
-            end
-        
-        
-        newTau2inv = simulateTau2Inv(newPhi, newSig2, k, lambda);   % Simulation of tau2Inv
-
+        % Simulate tau2inverse
+            lam_g = lambda^2 * ones(k-1,1);
+            mu_g = sqrt(lambda^2 * newSig2 ./ newPhi.^2);
+            newTau2inv = invGaussianMultipleParams(lam_g,mu_g,1);
+           
         % save the new step
         phiChain(k,1:k-1,round) = newPhi';
         sig2Chain(k, round) = newSig2;
