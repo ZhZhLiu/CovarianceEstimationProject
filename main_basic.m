@@ -8,7 +8,7 @@ sig2 = 0.01;        % variance of the data
 rho = 0.5;          % exponential decay of the T matrix
 
 % Use the producedure to generate the correct dataset c
-[data,SIGINV, SIG_TRUE, T_TRUE, DINV_TRUE] = generateDataset(n,p,sig2,rho,'cutoff');
+[data,SIGINV, SIG_TRUE, T_TRUE, DINV_TRUE] = generateDataset(n,p,sig2,rho,'decay');
 
 %% Start the Gibbs Sampler for estimation procedure
 

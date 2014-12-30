@@ -28,6 +28,5 @@ print(handle, '-depsc', nameFile_EPS);
 print(handle, '-djpeg', nameFile_JPG);
 savefig(handle,nameFile_FIG);
 
-
 end
 
