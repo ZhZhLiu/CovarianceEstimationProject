@@ -1,6 +1,31 @@
-function [] = ExportCovarianceMatricesGraph(SIG_TRUE, COV_EST, SIGINV, COVINV_EST, data, fileName, lambda)
+function [] = ExportCovarianceMatricesGraph(SIG_TRUE, COV_EST, SIGINV, COVINV_EST, data, lambda, fileName, rootPath)
 
-handle = figure(1);
+handle = figure(2);
+
+
+% Handling the directory and folder
+
+epsPath = strcat(rootPath, 'MatrixSurfacePlot/EPS/');
+figPath = strcat(rootPath, 'MatrixSurfacePlot/FIG/');
+jpgPath = strcat(rootPath, 'MatrixSurfacePlot/JPG/');
+
+nameFile_EPS = strcat(epsPath, sprintf('%s.eps', fileName));
+nameFile_FIG = strcat(figPath, sprintf('%s.fig', fileName));
+nameFile_JPG = strcat(jpgPath, sprintf('%s.jpg', fileName));
+
+if exist(epsPath,'dir') == 0
+    mkdir(epsPath);
+end
+
+if exist(figPath,'dir') == 0
+    mkdir(figPath);
+end
+
+if exist(jpgPath,'dir') == 0
+    mkdir(jpgPath);
+end
+
+% Plotting Graph
 
 subplot(2,3,1)
 imagesc(SIG_TRUE);
@@ -32,9 +57,7 @@ imagesc(COVINV_EST);
 title(sprintf('Regularized Covariance Inverse \\lambda=%4.2f', lambda))
 axis square
 
-nameFile_EPS = sprintf('EstimationFigures/Eps/%s.eps', fileName);
-nameFile_FIG = sprintf('EstimationFigures/Fig/%s.fig', fileName);
-nameFile_JPG = sprintf('EstimationFigures/Jpg/%s.jpg', fileName);
+% Print out the results
 
 set(gcf,'PaperPositionMode','auto')
 set(handle, 'Position', [100, 100, 1400, 900]);
